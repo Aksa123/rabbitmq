@@ -1,0 +1,8 @@
+version: "1"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.13.3
+    container_name: rabbitmq-container
+    hostname: my-rabbit
+    
