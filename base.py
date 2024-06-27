@@ -3,7 +3,7 @@ import pika.credentials
 
 
 creds = pika.credentials.PlainCredentials(username="user", password="password")
-conn = pika.BlockingConnection(pika.ConnectionParameters(host="localhost", port=5672, credentials=creds))
+conn = pika.BlockingConnection(pika.ConnectionParameters(host="localhost", port=5672, virtual_host="/", credentials=creds))
 channel = conn.channel()
 
 channel.queue_declare("queue_1")
