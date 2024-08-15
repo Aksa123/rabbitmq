@@ -2,21 +2,22 @@ version: "1"
 
 services:
   rabbitmq-1:
-    image: rabbitmq:3.13-management
+    build: .
     container_name: rabbit-1
     hostname: rabbit-host-1
     ports:
-      - 5672:5672
-      - 15672:15672
+      - 5672:5672   # broker
+      - 15672:15672 # management
+      - 5552:5552   # streams
     expose:
-      - 5672
-      - 15672
       - 4369
       - 6000
       - 25672
       - 35672
       - 35677
       - 35682
+    volumes:
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
     environment:
       - RABBITMQ_DEFAULT_VHOST=/
       - RABBITMQ_DEFAULT_USER=user
@@ -26,58 +27,12 @@ services:
       - host.docker.internal:host-gateway
     networks:
       - rabbit-net
-  # rabbitmq-2:
-  #   image: rabbitmq:3.13-management
-  #   container_name: rabbit-2
-  #   hostname: rabbit-host-2
-  #   ports:
-  #     - 5673:5672
-  #     - 15673:15672
-  #   expose:
-  #     - 5672
-  #     - 15672
-  #     - 4369
-  #     - 6000
-  #     - 25672
-  #     - 35672
-  #     - 35677
-  #     - 35682
-  #   environment:
-  #     - RABBITMQ_DEFAULT_VHOST=/
-  #     - RABBITMQ_DEFAULT_USER=user
-  #     - RABBITMQ_DEFAULT_PASS=password
-  #     - RABBITMQ_ERLANG_COOKIE=erlang-cookie-must-be-same-on-all-nodes-123
-  #   extra_hosts:
-  #     - host.docker.internal:host-gateway
-  #   networks:
-  #     - rabbit-net
-  # rabbitmq-3:
-  #   image: rabbitmq:3.13-management
-  #   container_name: rabbit-3
-  #   hostname: rabbit-host-3
-  #   ports:
-  #     - 5674:5672
-  #     - 15674:15672
-  #   expose:
-  #     - 5672
-  #     - 15672
-  #     - 4369
-  #     - 6000
-  #     - 25672
-  #     - 35672
-  #     - 35677
-  #     - 35682
-  #   environment:
-  #     - RABBITMQ_DEFAULT_VHOST=/
-  #     - RABBITMQ_DEFAULT_USER=user
-  #     - RABBITMQ_DEFAULT_PASS=password
-  #     - RABBITMQ_ERLANG_COOKIE=erlang-cookie-must-be-same-on-all-nodes-123
-  #   extra_hosts:
-  #     - host.docker.internal:host-gateway
-  #   networks:
-  #     - rabbit-net
+      - dbnet
 
 networks:
   rabbit-net:
     name: rabbit-net
     driver: bridge
+  dbnet:
+    name: dbnet
+    external: true
